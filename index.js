@@ -72,9 +72,6 @@ router.post('/txnlist',  async (req,res,next) => {
     
 })
 
-router.get('/gettxnlist',async (req,res,next) => {
-    
-    
-})
+
 
 module.exports = router;
