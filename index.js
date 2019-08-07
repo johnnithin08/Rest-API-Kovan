@@ -17,6 +17,11 @@ router.post('/txnlist',  async (req,res,next) => {
     let address = req.body.address.trim().toString(16)
 
     console.log("address",address.length)
+    if(address.length == 40)
+     {
+         address = '0x' + address;
+         console.log("address",address)
+     }
     // let address2 = '0x254DB636aF5a759B00cD809E605D513a63704724'
     let lastBlock = await Web3.eth.getBlock('latest');
     console.log(`${lastBlock.number} last block is that`);
@@ -27,6 +32,10 @@ router.post('/txnlist',  async (req,res,next) => {
         if(error){
             return res.status(400).json({message: "api failed"})
         }
+        else if(body.result == undefined)
+         {
+             return res.status(401).json({message : "Address not valid"})
+         }
         // console.log(body.result.length)
         console.log(body.result);
         // console.log(body.result.length)
@@ -53,17 +62,19 @@ router.post('/txnlist',  async (req,res,next) => {
             });
         let db = await txlist.save();
         console.log("db",db)
+        
+        let fetchdata = await Txlist.findOne({ Address : '0xb9885A46Fd84546EE5aefC0B07323f730EeCB015'})
+        console.log("data",fetchdata.From)
+        res.status(201).json({data:fetchdata.From})
+        
 
-        res.status(200).json({data: body.status});
      });
     
 })
 
 router.get('/gettxnlist',async (req,res,next) => {
     
-    let fetchdata = await Txlist.findOne({ Address : '0xb9885A46Fd84546EE5aefC0B07323f730EeCB015'})
-        console.log("data",fetchdata.From)
-    res.status(201).json({data:fetchdata.From})
+    
 })
 
 module.exports = router;
